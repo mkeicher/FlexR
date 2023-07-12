@@ -20,11 +20,11 @@ The automation of chest X-ray reporting has garnered significant interest due to
 
 ### Method
 
-FlexR is a method for fine-tuning vision-language models when zero-shot performance proves insufficient. It is based on initializing class embeddings using their textual descriptions and subsequently optimizing these embeddings with a limited number of annotated samples. This method's versatility allows for applications in the classification of fine-grained clinical findings such as disease grading and localization as well as the prediction of rare findings in long-tailed class distributions.
+FlexR is a method for fine-tuning vision-language models when zero-shot performance proves insufficient. It builds on zero-shot classification by initializing class embeddings using their textual descriptions and subsequently optimizes these embeddings with a limited number of annotated samples. This method's versatility allows for applications in the classification of fine-grained clinical findings such as disease grading and localization as well as the prediction of rare findings in long-tailed class distributions.
 
 Applied to the prediction of clinical findings defined by sentences in standardized reports, the method consists of the following steps:
 1. Contrastive language-image pretraining (CLIP) on a dataset of radiology images and free-text reports
-2. Encode possible clinical findings of the structured report into language embeddings
+2. Encode possible clinical findings of the structured report into language embeddings (zero-shot initialization)
 3. Fine-tune these language embeddings by optimizing cosine similarity with image embeddings using the LogSumExpSign-Loss designed for long-tailed distributions
 
 ![Graphical Abstract](pics/graphical_abstract.png)
@@ -43,4 +43,4 @@ Applied to the prediction of clinical findings defined by sentences in standardi
 
 ### Instructions
 
-***Full code coming soon***
+***Code coming soon..***
