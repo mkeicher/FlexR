@@ -1,0 +1,44 @@
+
+model:
+  class_path: models.clip.FlexrClipModule
+  init_args:
+    in_channels: 3
+    image_encoder: checkpoints/densenet121_pretrained.ckpt
+    text_encoder: allenai/scibert_scivocab_uncased
+    tokenizer: allenai/scibert_scivocab_uncased
+    max_token_length: 77
+
+data:
+  class_path: data.imagenome.ImagenomeDataModule
+  init_args:
+    batch_size: 128
+    num_workers: 12
+    data_dir: /home/data/DIVA/mimic/datasets/240620_imagenome_triplets_ffcv
+    in_channels: ${model.init_args.in_channels}
+    tokenizer: ${model.init_args.tokenizer}
+    max_token_length: ${model.init_args.max_token_length}
+    add_triplets_to_sentences: false
+    random_sentence: 1
+
+trainer:
+  accumulate_grad_batches: 16
+  max_epochs: 300
+  precision: 16-mixed
+  log_every_n_steps: 100
+  logger:
+    - class_path: lightning.pytorch.loggers.wandb.WandbLogger
+      init_args:
+        save_dir: /home/data/DIVA/flexr/logs
+        project: FLEXR-clip
+        entity: ifl-diva
+  callbacks:
+    - class_path: lightning.pytorch.callbacks.ModelCheckpoint
+      init_args:
+        auto_insert_metric_name: false
+        filename: 'flexr_clip_checkpoint_epoch={epoch}-loss_{valid/loss:.4f}'
+        monitor: valid/loss
+        mode: min
+        save_last: true
+        save_top_k: 5
+        verbose: true
+    - class_path: lightning.pytorch.callbacks.LearningRateMonitor

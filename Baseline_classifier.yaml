@@ -1,0 +1,40 @@
+
+model:
+  class_path: models.classifier.ClassifierModule
+  init_args:
+    image_encoder: densenet121
+    in_channels: 3
+    num_classes: 9
+
+data:
+  batch_size: 256
+  num_workers: 12
+  data_dir: /home/data/DIVA/mimic/datasets/240620_imagenome_triplets_ffcv
+  in_channels: 3
+  outputs:
+    - study_id
+    - image
+    - attributes
+
+trainer:
+  accumulate_grad_batches: 16
+  max_epochs: 25
+  precision: 16-mixed
+  log_every_n_steps: 100
+  logger:
+    - class_path: lightning.pytorch.loggers.wandb.WandbLogger
+      init_args:
+        save_dir: /home/data/DIVA/flexr/logs
+        project: FLEXR-classifier
+        entity: ifl-diva
+  callbacks:
+    - class_path: lightning.pytorch.callbacks.ModelCheckpoint
+      init_args:
+        auto_insert_metric_name: false
+        filename: 'flexr_classifier_checkpoint_epoch={epoch}-loss_{valid/loss:.4f}'
+        monitor: valid/loss
+        mode: min
+        save_last: true
+        save_top_k: 5
+        verbose: true
+    - class_path: lightning.pytorch.callbacks.LearningRateMonitor
