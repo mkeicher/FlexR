@@ -1,0 +1,207 @@
+
+data:
+  class_path: data.imagenome.ImagenomeDataModule
+  init_args:
+    batch_size: 256
+    num_workers: 12
+    data_dir: /home/data/DIVA/mimic/datasets/240620_imagenome_triplets_ffcv
+    in_channels: 3
+    max_token_length: 77
+    tokenizer: allenai/scibert_scivocab_uncased
+    outputs:
+      - study_id
+      - image
+      - triplets_onehot
+    sampling: null
+
+trainer:
+  accumulate_grad_batches: 1
+  max_epochs: 10
+  precision: 16-mixed
+  log_every_n_steps: 10
+  logger:
+    - class_path: lightning.pytorch.loggers.wandb.WandbLogger
+      init_args:
+        save_dir: /home/data/DIVA/flexr/logs
+        project: FLEXR-finetune
+        entity: ifl-diva
+  callbacks:
+    - class_path: lightning.pytorch.callbacks.ModelCheckpoint
+      init_args:
+        auto_insert_metric_name: false
+        filename: flexr_finetune_checkpoint_epoch={epoch}-loss_{valid/mAUC mean:.4f}
+        monitor: valid/mAUC mean
+        mode: max
+        save_last: true
+        save_top_k: 5
+        verbose: true
+    - class_path: lightning.pytorch.callbacks.LearningRateMonitor
+
+model:
+  class_path: models.finetune.FlexrFinetuneModule
+  init_args:
+    clip_checkpoint: checkpoints/FlexR-CLIP.ckpt
+    learning_rate: 0.0001
+    prompts:
+      - lung opacity in the right lung
+      - lung opacity in the right apical zone
+      - lung opacity in the right upper lung zone
+      - lung opacity in the right mid lung zone
+      - lung opacity in the right lower lung zone
+      - lung opacity in the right hilar structures
+      - lung opacity in the left lung
+      - lung opacity in the left apical zone
+      - lung opacity in the left upper lung zone
+      - lung opacity in the left mid lung zone
+      - lung opacity in the left lower lung zone
+      - lung opacity in the left hilar structures
+      - lung opacity in the right costophrenic angle
+      - lung opacity in the left costophrenic angle
+      - lung opacity in the mediastinum
+      - lung opacity in the upper mediastinum
+      - lung opacity in the cardiac silhouette
+      - lung opacity in the trachea
+      - pleural effusion in the right lung
+      - pleural effusion in the right apical zone
+      - pleural effusion in the right upper lung zone
+      - pleural effusion in the right mid lung zone
+      - pleural effusion in the right lower lung zone
+      - pleural effusion in the right hilar structures
+      - pleural effusion in the left lung
+      - pleural effusion in the left apical zone
+      - pleural effusion in the left upper lung zone
+      - pleural effusion in the left mid lung zone
+      - pleural effusion in the left lower lung zone
+      - pleural effusion in the left hilar structures
+      - pleural effusion in the right costophrenic angle
+      - pleural effusion in the left costophrenic angle
+      - pleural effusion in the mediastinum
+      - pleural effusion in the upper mediastinum
+      - pleural effusion in the cardiac silhouette
+      - pleural effusion in the trachea
+      - atelectasis in the right lung
+      - atelectasis in the right apical zone
+      - atelectasis in the right upper lung zone
+      - atelectasis in the right mid lung zone
+      - atelectasis in the right lower lung zone
+      - atelectasis in the right hilar structures
+      - atelectasis in the left lung
+      - atelectasis in the left apical zone
+      - atelectasis in the left upper lung zone
+      - atelectasis in the left mid lung zone
+      - atelectasis in the left lower lung zone
+      - atelectasis in the left hilar structures
+      - atelectasis in the right costophrenic angle
+      - atelectasis in the left costophrenic angle
+      - atelectasis in the mediastinum
+      - atelectasis in the upper mediastinum
+      - atelectasis in the cardiac silhouette
+      - atelectasis in the trachea
+      - enlarged cardiac silhouette in the right lung
+      - enlarged cardiac silhouette in the right apical zone
+      - enlarged cardiac silhouette in the right upper lung zone
+      - enlarged cardiac silhouette in the right mid lung zone
+      - enlarged cardiac silhouette in the right lower lung zone
+      - enlarged cardiac silhouette in the right hilar structures
+      - enlarged cardiac silhouette in the left lung
+      - enlarged cardiac silhouette in the left apical zone
+      - enlarged cardiac silhouette in the left upper lung zone
+      - enlarged cardiac silhouette in the left mid lung zone
+      - enlarged cardiac silhouette in the left lower lung zone
+      - enlarged cardiac silhouette in the left hilar structures
+      - enlarged cardiac silhouette in the right costophrenic angle
+      - enlarged cardiac silhouette in the left costophrenic angle
+      - enlarged cardiac silhouette in the mediastinum
+      - enlarged cardiac silhouette in the upper mediastinum
+      - enlarged cardiac silhouette in the cardiac silhouette
+      - enlarged cardiac silhouette in the trachea
+      - pulmonary edema/hazy opacity in the right lung
+      - pulmonary edema/hazy opacity in the right apical zone
+      - pulmonary edema/hazy opacity in the right upper lung zone
+      - pulmonary edema/hazy opacity in the right mid lung zone
+      - pulmonary edema/hazy opacity in the right lower lung zone
+      - pulmonary edema/hazy opacity in the right hilar structures
+      - pulmonary edema/hazy opacity in the left lung
+      - pulmonary edema/hazy opacity in the left apical zone
+      - pulmonary edema/hazy opacity in the left upper lung zone
+      - pulmonary edema/hazy opacity in the left mid lung zone
+      - pulmonary edema/hazy opacity in the left lower lung zone
+      - pulmonary edema/hazy opacity in the left hilar structures
+      - pulmonary edema/hazy opacity in the right costophrenic angle
+      - pulmonary edema/hazy opacity in the left costophrenic angle
+      - pulmonary edema/hazy opacity in the mediastinum
+      - pulmonary edema/hazy opacity in the upper mediastinum
+      - pulmonary edema/hazy opacity in the cardiac silhouette
+      - pulmonary edema/hazy opacity in the trachea
+      - pneumothorax in the right lung
+      - pneumothorax in the right apical zone
+      - pneumothorax in the right upper lung zone
+      - pneumothorax in the right mid lung zone
+      - pneumothorax in the right lower lung zone
+      - pneumothorax in the right hilar structures
+      - pneumothorax in the left lung
+      - pneumothorax in the left apical zone
+      - pneumothorax in the left upper lung zone
+      - pneumothorax in the left mid lung zone
+      - pneumothorax in the left lower lung zone
+      - pneumothorax in the left hilar structures
+      - pneumothorax in the right costophrenic angle
+      - pneumothorax in the left costophrenic angle
+      - pneumothorax in the mediastinum
+      - pneumothorax in the upper mediastinum
+      - pneumothorax in the cardiac silhouette
+      - pneumothorax in the trachea
+      - consolidation in the right lung
+      - consolidation in the right apical zone
+      - consolidation in the right upper lung zone
+      - consolidation in the right mid lung zone
+      - consolidation in the right lower lung zone
+      - consolidation in the right hilar structures
+      - consolidation in the left lung
+      - consolidation in the left apical zone
+      - consolidation in the left upper lung zone
+      - consolidation in the left mid lung zone
+      - consolidation in the left lower lung zone
+      - consolidation in the left hilar structures
+      - consolidation in the right costophrenic angle
+      - consolidation in the left costophrenic angle
+      - consolidation in the mediastinum
+      - consolidation in the upper mediastinum
+      - consolidation in the cardiac silhouette
+      - consolidation in the trachea
+      - fluid overload/heart failure in the right lung
+      - fluid overload/heart failure in the right apical zone
+      - fluid overload/heart failure in the right upper lung zone
+      - fluid overload/heart failure in the right mid lung zone
+      - fluid overload/heart failure in the right lower lung zone
+      - fluid overload/heart failure in the right hilar structures
+      - fluid overload/heart failure in the left lung
+      - fluid overload/heart failure in the left apical zone
+      - fluid overload/heart failure in the left upper lung zone
+      - fluid overload/heart failure in the left mid lung zone
+      - fluid overload/heart failure in the left lower lung zone
+      - fluid overload/heart failure in the left hilar structures
+      - fluid overload/heart failure in the right costophrenic angle
+      - fluid overload/heart failure in the left costophrenic angle
+      - fluid overload/heart failure in the mediastinum
+      - fluid overload/heart failure in the upper mediastinum
+      - fluid overload/heart failure in the cardiac silhouette
+      - fluid overload/heart failure in the trachea
+      - pneumonia in the right lung
+      - pneumonia in the right apical zone
+      - pneumonia in the right upper lung zone
+      - pneumonia in the right mid lung zone
+      - pneumonia in the right lower lung zone
+      - pneumonia in the right hilar structures
+      - pneumonia in the left lung
+      - pneumonia in the left apical zone
+      - pneumonia in the left upper lung zone
+      - pneumonia in the left mid lung zone
+      - pneumonia in the left lower lung zone
+      - pneumonia in the left hilar structures
+      - pneumonia in the right costophrenic angle
+      - pneumonia in the left costophrenic angle
+      - pneumonia in the mediastinum
+      - pneumonia in the upper mediastinum
+      - pneumonia in the cardiac silhouette
+      - pneumonia in the trachea
