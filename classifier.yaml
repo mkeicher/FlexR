@@ -9,7 +9,7 @@ model:
 data:
   batch_size: 256
   num_workers: 12
-  data_dir: /home/data/DIVA/mimic/datasets/240620_imagenome_triplets_ffcv
+  data_dir: PATH_TO_FFCV_DATASET
   in_channels: 3
   outputs:
     - study_id
@@ -24,7 +24,7 @@ trainer:
   logger:
     - class_path: lightning.pytorch.loggers.wandb.WandbLogger
       init_args:
-        save_dir: /home/data/DIVA/flexr/logs
+        save_dir: logs
         project: FLEXR-classifier
         entity: ifl-diva
   callbacks:
