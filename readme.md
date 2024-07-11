@@ -98,10 +98,14 @@ python preprocess/imagenome_to_fccv_dataset.py --mimic_cxr_path DATA_PATH/mimic-
 Required for FlexR-CLIP pretraining:
 - Download the pretrained DenseNet121 from [here](https://github.com/mkeicher/FlexR/releases/download/v1.0/densenet121_pretrained.ckpt) and put it in the `checkpoints` folder 
 
-```wget -P checkpoints https://github.com/mkeicher/FlexR/releases/download/v1.0/densenet121_pretrained.ckpt```
+```
+wget -P checkpoints https://github.com/mkeicher/FlexR/releases/download/v1.0/densenet121_pretrained.ckpt
+```
 - Download the pretrained FlexR-CLIP model from [here](https://github.com/mkeicher/FlexR/releases/download/v1.0/FlexR-CLIP.ckpt) and put it in the `checkpoints` folder
 
-```wget -P checkpoints https://github.com/mkeicher/FlexR/releases/download/v1.0/FlexR-CLIP.ckpt```
+```
+wget -P checkpoints https://github.com/mkeicher/FlexR/releases/download/v1.0/FlexR-CLIP.ckpt
+```
 
 ## FlexR Experiments
 Before running any experiments make sure to adjust the following settings either in respective config file or via command line arguments:
